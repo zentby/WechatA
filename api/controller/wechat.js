@@ -24,9 +24,9 @@ router.all('/auth', function(req, res) {
 	});
 });
 
-router.post('/', wechat.validateCall);
+router.all('/message', wechat.validateCall);
 
-router.post('/', function(req, res) {
+router.all('/message', function(req, res) {
 	try {
 		var parseString = require('xml2js').parseString;
 		logger.debug(req.body);

@@ -1,5 +1,6 @@
 var logger = require("bole")('wechat-api');
 var request = require('request');
+var sha1 = require('sha1');
 
 function WeChatApi(setting) {
 

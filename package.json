@@ -4,16 +4,18 @@
   "description": "Wechat client for calling assembla api",
   "main": "index.js",
   "dependencies": {
-    "express-session": "^1.11.3",
     "body-parser": "^1.13.1",
     "bole": "^2.0.0",
     "express": "^4.13.0",
+    "express-session": "^1.11.3",
     "fs": "^0.0.2",
     "lodash": "^3.9.3",
-    "util": "^0.10.3",
     "mongoose": "^4.0.6",
+    "request": "^2.58.0",
+    "sha1": "^1.1.1",
     "url": "^0.10.3",
-    "request": "^2.58.0"
+    "util": "^0.10.3",
+    "xml2js": "^0.4.9"
   },
   "devDependencies": {},
   "scripts": {
