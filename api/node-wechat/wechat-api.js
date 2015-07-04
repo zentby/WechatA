@@ -114,17 +114,17 @@ function WeChatApi(setting) {
 			running = false;
 		}
 	};
-
-	var init = false;
 	this.setup = function() {
-		this.refreshToken();
+		this.refreshToken(function(err, token){
+			if (!err) {
+				this.createClientButtons();
+				logger.debug('Button created');
+			}
+			logger.debug('Init token finished');
+		});
 		setInterval(function() {
 			this.refreshToken(function(err, newToken) {
 				logger.debug('Refresh token service runs');
-				if (!init) {
-					createClientButtons();
-					init = true;
-				}
 			});
 
 		}, 20 * 60 * 1000);
