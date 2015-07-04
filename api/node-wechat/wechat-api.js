@@ -4,6 +4,7 @@ var sha1 = require('sha1');
 
 function WeChatApi(setting) {
 
+	var me = this;
 	var _appId = setting.appId || '';
 	var _appSecret = setting.appSecret || '';
 
@@ -50,7 +51,7 @@ function WeChatApi(setting) {
 			if (options.json) parameters.json = options.json;
 			logger.debug('api is called: ' + JSON.stringify(parameters));
 			request(parameters, function(err, res, body) {
-				logger.debug	('api is returned: ' + body);
+				logger.debug('api is returned: ' + body);
 				if (!err && res.statusCode == 200) {
 					var result = JSON.parse(body);
 					//if (result.errcode) TODO: validataion
@@ -115,9 +116,9 @@ function WeChatApi(setting) {
 		}
 	};
 	this.setup = function() {
-		this.refreshToken(function(err, token){
+		this.refreshToken(function(err, token) {
 			if (!err) {
-				this.createClientButtons();
+				me.createClientButtons();
 				logger.debug('Button created');
 			}
 			logger.debug('Init token finished');
