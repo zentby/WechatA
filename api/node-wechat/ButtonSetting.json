@@ -5,7 +5,7 @@
           "sub_button":[{
                "type":"view",
                "name":"Mapping Account",
-               "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxefc49bd059a5bd90&redirect_uri=http%3A%2F%2F112.74.108.238%2Foauth%2Fcheck&response_type=code&scope=snsapi_base#wechat_redirect"
+               "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxefc49bd059a5bd90&redirect_uri=http%3A%2F%2F112.74.108.238%2Fwechat%2Fauth&response_type=code&scope=snsapi_base#wechat_redirect"
           },{
                "type":"click",
                "name":"Default Space",
@@ -18,16 +18,16 @@
            {  
                "type":"view",
                "name":"All Metions",
-               "url":"http://112.74.108.238/"
+               "url":"http://112.74.108.238/wechata/metions"
             },{	
                "type":"view",
                "name":"All Followed",
-               "url":"http://112.74.108.238/"
+               "url":"http://112.74.108.238/wechata/followed"
             },
             {
                "type":"view",
                "name":"All Assigned",
-               "url":"http://112.74.108.238/"
+               "url":"http://112.74.108.238/wechata/assigned"
             }]
        }]
  }

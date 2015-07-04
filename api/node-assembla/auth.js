@@ -17,30 +17,25 @@
             return res ? res.redirect(url) : url;
         };
 
-        this.getAccessToken = function(res, code, cb) {
+        this.getAccessToken = function(code, callback) {
 
-            if (typeof res == 'string'){
-                cb = code;
-                code = res;
-                res = null;
-            }
         //https://_client_id:_client_secret@api.assembla.com/token?grant_type=authorization_code&code=_authorization_code
             var url  = util.format('https://api.assembla.com/token?grant_type=authorization_code&code=%s', code);
 
             request.post({url: url}, function(err, response, body) {
 
                 if (err)
-                    return cb(err, null);
+                    return callback(err, null);
 
-                var res = JSON.body;
+                var result = body;
 
-                if (typeof res.error !== 'undefined') {
-                    err = new Error(res.error_description);
-                    err.name = res.error;
-                    return cb(err, null);
+                if (typeof result.error !== 'undefined') {
+                    err = new Error(result.error_description);
+                    err.name = result.error;
+                    return callback(err, null);
                 }
 
-                return cb(null, res);
+                return callback(null, result);
 
             }).auth(args.appId, args.appSecret);
         };
