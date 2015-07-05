@@ -143,7 +143,7 @@ function WeChatApi(setting) {
 			logger.debug('Init token finished');
 		});
 		setInterval(function() {
-			this.refreshToken(function(err, newToken) {
+			me.refreshToken(function(err, newToken) {
 				logger.debug('Refresh token service runs');
 			});
 

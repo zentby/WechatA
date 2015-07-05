@@ -36,8 +36,10 @@ router.all('/message', function(req, res) {
 			req.session.openid = result.xml.FromUserName;
 			database.updateUserWechatLastReceived(result.xml.FromUserName);
 			database.logMsg(result.xml);
-			res.header('Content-Type', 'text/xml');
-			res.send(messenger.getReplyMsg(result.xml));
+			messenger.getReplyMsg(result.xml, function(msg) {
+				res.header('Content-Type', 'text/xml');
+				res.send(msg);
+			});
 		});
 
 	} catch (e) {

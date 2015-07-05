@@ -23,7 +23,7 @@ var user = Schema({
 });
 
 user.methods.hasAssemblaExpired = function () {
-  return this.Assembla.expire_at < Date.now();
+  return this.Assembla.expire_at && this.Assembla.expire_at < Date.now();
 }
 
 module.exports = mongoose.model('Users', user);
