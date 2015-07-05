@@ -6,6 +6,10 @@ var wechat = api.wechat,
 	assembla = api.assembla,
 	database = api.database;
 
+//definitions
+
+
+//routers
 router.all('/auth', function(req, res){
 	assembla.auth.getAccessToken(req.query.code, function(err, token){
 		var openid = req.session.openid;

@@ -31,7 +31,7 @@ function Database() {
     };
 
     this.updateUserWechatLastReceived = function(openid) {
-        logger.debug('Get User By OpenId:' + openid);
+        logger.debug('Update User Message Last Sent:' + openid);
         this.getUserByOpenId(openid, function(user) {
             user.Wechat.LastReceive = Date.now();
             user.save();

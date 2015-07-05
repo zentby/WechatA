@@ -1,8 +1,9 @@
+var logger = require("bole")('assembla-auth');
 (function() {
 
-    var _ = require('lodash')
-        , util = require('util')
-        , request = require('request');
+    var _ = require('lodash'), 
+    util = require('util'), 
+    request = require('request');
 
     var Auth = function(Inherits, args) {
         Inherits(this);
@@ -24,13 +25,16 @@
 
             request.post({url: url}, function(err, response, body) {
 
-                if (err)
+                if (err){
+                    logger.error(err);
                     return callback(err, null);
+                }
 
                 var result = body;
 
                 if (typeof result.error !== 'undefined') {
-                    err = new Error(result.error_description);
+                    logger.error(result.error);
+                    err = new Error(result.error);
                     err.name = result.error;
                     return callback(err, null);
                 }
@@ -40,14 +44,13 @@
             }).auth(args.appId, args.appSecret);
         };
 
-
         this.setAccessToken = function(accessToken) {
-            this.options['accessToken'] = accessToken;
+            this.options.accessToken = accessToken;
         };
 
         this.getOptions = function() {
             return this.options;
-        }
+        };
 
         return this;
     }.bind(this);

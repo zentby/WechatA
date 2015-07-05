@@ -16,7 +16,7 @@ bole.output([{
 	level: "debug",
 	stream: process.stdout
 },{
-	level: 'error',
+	level: 'debug',
 	stream: fs.createWriteStream('./log/server.log')
 }]);
 

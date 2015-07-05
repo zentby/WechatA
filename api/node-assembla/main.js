@@ -18,16 +18,22 @@
             appSecret: appSecret
         });
 
-        this.init = function(accessToken, options) {
-            if (typeof accessToken !== 'string'){
-                options = accessToken || {};
-                accessToken = null;
-                options.isx = true;
+        this.init = function(options) {
+            /*
+            options = {
+                accessToken: '',
+                expire_at: date,
+                refreshToken: '';
+                timeout: 0,
+                isx: false
             }
+            */
 
-            this.options.accessToken = accessToken;
 
             options = options || {};
+            this.options.accessToken = options.accessToken;
+            this.options.refreshToken = options.refreshToken;
+            this.options.expire_at = options.expire_at;
             this.options.timeout = options.timeout;
             this.options.isx = options.isx || false;
             if (this.options.isx){
@@ -40,6 +46,28 @@
             });
             return self;
         }
+
+
+        this.refreshToken = function (config, callback) {
+            if (!this.options.refreshToken) callback(new Error('No Refresh Token'));
+            var url  = util.format('https://api.assembla.com/token?grant_type=refresh_token&refresh_token=%s', this.options.refreshToken);
+
+            request.post({url: url}, function(err, response, body) {
+
+                if (err){
+                    this.options.accessToken = '';
+                    this.options.refreshToken = '';
+                    logger.error(err);
+                    return  callback(err);
+                }
+
+                var result = body;
+
+                this.options.accessToken = result.accessToken;
+                this.options.expire_at = Date.now() + (result.expire_in * 1000);
+
+            }).auth(args.appId, args.appSecret);        
+        };
 
         return this;
     }.bind(this);

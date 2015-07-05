@@ -20,6 +20,8 @@ app.all('*', function(req, res, next) {
 });
 app.use('/api', require("./api/router"));
 
+app.use('/', require('./public/router'));
+
 //FINALLY, use any error handlers
 app.use(require("./api/errors/notFound"));
 

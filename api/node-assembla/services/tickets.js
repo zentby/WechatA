@@ -1,4 +1,3 @@
-
 (function() {
     var _ = require('lodash');
 
@@ -19,13 +18,22 @@
             'status_name', 'working_hours'
         ];
 
-        this.tickets = function(space_id, callback) {
-            this.createCall('GET', 'spaces/' + space_id + '/tickets', callback)(this.config);
+        this.assigned = function(space_id, callback) {
+            this.createCall('GET', 'spaces/' + space_id + '/tickets/my_active', callback)(this.config);
+        };
+
+        this.followed = function(space_id, callback) {
+            this.createCall('GET', 'spaces/' + space_id + '/tickets/my_followed', callback)(this.config);
         };
 
         this.ticket = function(space_id, number, callback) {
-            this.createCall('GET', 'spaces/' + space_id + '/tickets/'+number, callback)(this.config);
+            this.createCall('GET', 'spaces/' + space_id + '/tickets/' + number, callback)(this.config);
         };
+
+        this.comments = function(space_id, number, callback) {
+            this.createCall('GET', 'spaces/' + space_id + '/tickets/' + number + '/ticket_comments', callback)(this.config);
+        };
+
 
         return this;
     }.bind(this);

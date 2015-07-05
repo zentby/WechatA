@@ -20,8 +20,8 @@ function WeChatApi(setting) {
 			next();
 			return;
 		}
-		var para = [_local_token, req.query.timestamp, req.query.nonce].sort().join('');
-		var isValid = sha1(para) == req.query.signature;
+		var para = this.getSignature(req.query.timestamp, req.query.nonce);
+		var isValid = para == req.query.signature;
 		if (!isValid) {
 			logger.error('invalid message ');
 			res.send('invalid message ');
@@ -32,6 +32,13 @@ function WeChatApi(setting) {
 			next();
 		}
 	};
+
+	this.getSignature = function (timestamp, id) {
+		timestamp = timestamp || '';
+		id = id || '';
+		var para = [_local_token, timestamp, id].sort().join('');
+		return sha1(para);
+	}
 
 	this.createCall = function(method, path, options, callback) {
 		return function() {
@@ -49,7 +56,7 @@ function WeChatApi(setting) {
 			};
 
 			if (options.json) parameters.json = options.json;
-			logger.debug('api is called: ' + JSON.stringify(parameters));
+			logger.debug('Api is called: ' + parameters);
 			request(parameters, function(err, res, body) {
 				logger.debug('api is returned: ' + body);
 				if (!err && res.statusCode == 200) {
@@ -67,23 +74,24 @@ function WeChatApi(setting) {
 
 	this.requestOpenId = function(code, callback) {
 		var urlapi = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + _appId + '&secret=' + _appSecret + '&code=' + code + '&grant_type=authorization_code';
-		logger.info('api called:' + urlapi);
+		logger.debug('api called:' + urlapi);
 
 		function requestcallback(error, response, body) {
-			logger.info('request openId' + body);
+			logger.debug('Requested openId:' + body);
 			if (body.errcode && body.errcode != '0') {
-				logger.info('Error:' + body.errmsg);
+				logger.error('Error:' + body.errmsg);
 				callback('');
 			} else {
 				callback(body.openid);
 			}
 		}
-		logger.info('Requesting OpenId');
+		logger.debug('Requesting OpenId');
 		request(urlapi, requestcallback);
 	};
 
 	this.createClientButtons = function() {
 		var buttons = require('./ButtonSetting.json');
+		logger.debug('Buttons: '+ buttons);
 		this.createCall('POST', '/menu/create', {
 			'access_token': _access_token.Token,
 			json: buttons
