@@ -20,7 +20,7 @@ function WeChatApi(setting) {
 			next();
 			return;
 		}
-		var para = this.getSignature(req.query.timestamp, req.query.nonce);
+		var para = me.getSignature(req.query.timestamp, req.query.nonce);
 		var isValid = para == req.query.signature;
 		if (!isValid) {
 			logger.error('invalid message ');
@@ -33,12 +33,12 @@ function WeChatApi(setting) {
 		}
 	};
 
-	this.getSignature = function (timestamp, id) {
+	this.getSignature = function(timestamp, id) {
 		timestamp = timestamp || '';
 		id = id || '';
 		var para = [_local_token, timestamp, id].sort().join('');
 		return sha1(para);
-	}
+	};
 
 	this.createCall = function(method, path, options, callback) {
 		return function() {
@@ -51,18 +51,21 @@ function WeChatApi(setting) {
 			var parameters = {
 				url: path,
 				method: method,
-				qs: options,
+				qs: options.qs,
 				timeout: 60 * 1000 /* Default to 60sec */
 			};
 
 			if (options.json) parameters.json = options.json;
-			logger.debug('Api is called: ' + parameters);
+			logger.debug('Wechat pi is called: ' + JSON.stringify(parameters));
 			request(parameters, function(err, res, body) {
-				logger.debug('api is returned: ' + body);
+				logger.debug('Wechat api is returned: err: %s body: %s', JSON.stringify(err), JSON.stringify(body));
 				if (!err && res.statusCode == 200) {
-					var result = JSON.parse(body);
 					//if (result.errcode) TODO: validataion
-					return callback(null, result);
+					if (Object.prototype.toString.call(body) != '[object Object]')
+                    {
+                        body = JSON.parse(body);
+                    }
+					return callback(null, body);
 				} else {
 					logger.error('Code:' + res.statusCode + 'Error:' + err);
 					return callback(err, null);
@@ -72,35 +75,40 @@ function WeChatApi(setting) {
 		};
 	};
 
-	this.requestOpenId = function(code, callback) {
-		var urlapi = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + _appId + '&secret=' + _appSecret + '&code=' + code + '&grant_type=authorization_code';
-		logger.debug('api called:' + urlapi);
+	// this.requestOpenId = function(code, callback) {
+	// 	var urlapi = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + _appId + '&secret=' + _appSecret + '&code=' + code + '&grant_type=authorization_code';
+	// 	logger.debug('api called:' + urlapi);
 
-		function requestcallback(error, response, body) {
-			logger.debug('Requested openId:' + body);
-			if (body.errcode && body.errcode != '0') {
-				logger.error('Error:' + body.errmsg);
-				callback('');
-			} else {
-				callback(body.openid);
-			}
-		}
-		logger.debug('Requesting OpenId');
-		request(urlapi, requestcallback);
-	};
+	// 	function requestcallback(error, response, body) {
+	// 		logger.debug('Requested openId:' + body);
+	// 		if (body.errcode && body.errcode != '0') {
+	// 			logger.error('Error:' + body.errmsg);
+	// 			callback('');
+	// 		} else {
+	// 			callback(body.openid);
+	// 		}
+	// 	}
+	// 	logger.debug('Requesting OpenId');
+	// 	request(urlapi, requestcallback);
+	// };
 
 	this.createClientButtons = function() {
 		var buttons = require('./ButtonSetting.json');
-		logger.debug('Buttons: '+ buttons);
-		this.createCall('POST', '/menu/create', {
-			'access_token': _access_token.Token,
+		this.createCall('POST', 'menu/create', {
+			qs: {
+				'access_token': _access_token.Token
+			},
 			json: buttons
 		}, function(err, body) {
-			if (body.errcode != '0')
+			if (err) {
+				logger.error(err);
+				return;
+			}
+			if (body && body.errcode && body.errcode != '0')
 				logger.error('Error:' + body.errmsg);
 			else
 				logger.info('Set Buttons Success');
-		});
+		})();
 	};
 
 	var running = false;
@@ -109,9 +117,11 @@ function WeChatApi(setting) {
 		running = true;
 		if (!_access_token.Token || (_access_token.ExpireAt - Date.now()) < 20 * 60 * 1000) {
 			this.createCall('GET', 'token', {
-				'grant_type': 'client_credential',
-				'appid': _appId,
-				'secret': _appSecret
+				qs: {
+					'grant_type': 'client_credential',
+					'appid': _appId,
+					'secret': _appSecret
+				}
 			}, function(err, token) {
 				if (err === null) {
 					_access_token.Token = token.access_token;
@@ -123,6 +133,7 @@ function WeChatApi(setting) {
 			running = false;
 		}
 	};
+
 	this.setup = function() {
 		this.refreshToken(function(err, token) {
 			if (!err) {

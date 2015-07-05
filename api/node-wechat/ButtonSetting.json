@@ -17,11 +17,11 @@
        "name": "All Metions",
        "key": "mentions"
      }, {
-       "type": "key",
+       "type": "click",
        "name": "All Assigned",
        "key": "assigned"
      }, {
-       "type": "key",
+       "type": "click",
        "name": "All Followed",
        "key": "followed"
      }]
