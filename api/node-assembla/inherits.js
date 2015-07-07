@@ -17,6 +17,7 @@ var logger = require("bole")('assembla-service');
                 var parameters = {
                     url: path,
                     method: method,
+                    qs: options.qs,
                     timeout: config.timeout || 60 * 1000 /* Default to 60sec */
                 };
                 

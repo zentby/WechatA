@@ -1,8 +1,12 @@
 var config = require("./config");
-var app = require("express")();
+var express = require("express")
+var app = express();
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var logger = require("bole")('entry');
+
+app.use(express.static(__dirname + '/public'));
+
 app.use(session({
 	secret: config.session.secret
 }));

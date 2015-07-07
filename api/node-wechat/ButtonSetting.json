@@ -8,15 +8,15 @@
      }, {
        "type": "click",
        "name": "Default Space",
-       "key": "Spaces"
+       "key": "spaces"
      }]
+   }, {
+     "type": "click",
+     "name": "Mentions",
+     "key": "mentions"
    }, {
      "name": "Tickets",
      "sub_button": [{
-       "type": "click",
-       "name": "All Metions",
-       "key": "mentions"
-     }, {
        "type": "click",
        "name": "All Assigned",
        "key": "assigned"

@@ -14,10 +14,15 @@ var logger = require("bole")('assembla-users');
         ];
 
         this.user = function(callback) {
-            logger.info('getting user...');
+            logger.debug('getting user...');
             this.createCall('GET', 'user', callback)(this.config);
         };
-        
+
+        this.userById = function(userid, callback) {
+            logger.debug('getting user by id...');
+            this.createCall('GET', 'user/' + userid, callback)(this.config);
+        };
+
         return this;
     }.bind(this);
 

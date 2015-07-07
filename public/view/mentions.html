@@ -2,67 +2,44 @@
 <!doctype html>
 
 <!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="scotchTodo">
+<html ng-app="wechataMentions">
 <head>
     <!-- META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-    <title>Node/Angular Todo App</title>
+    <title>Mentions</title>
 
-    <!-- SCROLLS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
     <style>
         html                    { overflow-y:scroll; }
         body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; text-align: left; margin-left: 10px;}
+        #mentions              { margin-bottom:30px; text-align: left; margin-left: 10px;}
     </style>
 
     <!-- SPELLS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
-    <script src="core.js"></script>
+    <script src="./../controller/mentions.js"></script>
 
 </head>
-<!-- SET THE CONTROLLER AND GET ALL TODOS -->
-<body ng-controller="mainController">
+<body ng-controller="mentionsController">
     <div class="container">
 
-        <!-- HEADER AND TODO COUNT -->
         <div class="jumbotron text-center">
-            <h1>Todo List <span class="label label-info">{{ todos.length }}</span></h1>
+            <h2>Mentions <span class="label label-info">{{ mentions.length }}</span></h2>
         </div>
 
         <!-- TODO LIST -->
-        <div id="todo-list" class="row">
-            <div class="col-sm-2 col-sm-offset-4">
-
-                <!-- LOOP OVER THE TODOS IN $scope.todos -->
-                <div class="checkbox" ng-repeat="todo in todos">
+        <div id="mentions" class="row" ng-show='hasMentions'>
+            <li  ng-repeat="mention in mentions">
                     <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+                    {{$index}}. {{ mention.message }}
                     </label>
-                </div>
-
-            </div>
+            </li>
         </div>
 
-        <!-- FORM TO CREATE TODOS -->
-        <div id="todo-form" class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-center">
-                <form>
-                    <div class="form-group">
-
-                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                        <input type="text" class="form-control input-lg text-center" placeholder="I want to buy a puppy that will love me forever" ng-model="formData.text">
-                    </div>
-
-                    <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add</button>
-                </form>
-            </div>
+        <div id="nocontent" class="row" ng-hide='hasMentions'>
+            <label>No Unread Mentions</label>
         </div>
-
     </div>
 
 </body>

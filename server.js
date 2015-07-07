@@ -8,6 +8,7 @@ global.db = mongo.open('mongodb://' + config.mongodb.host + ':' + config.mongodb
 var app = require("./index");
 var fs = require('fs');
 
+
 //Use whichever logging system you prefer.
 //Doesn't have to be bole, I just wanted something more or less realistic
 var bole = require("bole");

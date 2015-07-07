@@ -49,6 +49,14 @@ function Database() {
         });
     };
 
+    this.updateUserAssemblaSpace = function (openid, spaceid) {
+        logger.debug('Update User Assembla Default Space:' + spaceid);
+        this.getUserByOpenId(openid, function(user) {
+            user.Assembla.DefaultSpace = spaceid;
+            user.save();
+        });
+    }
+
     this.updateUser = function(condition, user) {
         logger.debug('Update User:' + (user ? JSON.stringify(user) : 'null'));
         user.update(condition, user, function(err, result) {

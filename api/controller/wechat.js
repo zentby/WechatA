@@ -9,9 +9,14 @@ var wechat = api.wechat,
 	database = api.database;
 var helper = require('./service-helper');
 
-router.all('/auth', function(req, res) {
+function validateUrl(req) {
+	if (!req.query.timestamp || req.query.timestamp < Date.now() - 20 * 60 * 1000) return false;
 	var signature = req.query.signature;
-	if (wechat.getSignature(req.query.timestamp, req.query.openid) == signature) {
+	return wechat.getSignature(req.query.timestamp, req.query.openid) == signature;
+}
+
+router.all('/auth', function(req, res) {
+	if (validateUrl(req)) {
 		req.session.openid = req.query.openid;
 		database.getUserByOpenId(req.query.openid, function(user) {
 			logger.debug('got user for checking oauth');
@@ -21,8 +26,30 @@ router.all('/auth', function(req, res) {
 				res.send('Your account has been mapped!');
 			}
 		});
+	} else {
+		res.send('Your link has expired or is not valid!');
 	}
 });
+
+router.get('/space/:space_id/set', function(req, res) {
+	if (validateUrl(req)) {
+		req.session.openid = req.query.openid;
+		database.updateUserAssemblaSpace(req.query.openid, req.param.space_id);
+		res.send('Default space has been set successfully');
+	} else {
+		res.send('Your link has expired or is not valid!');
+	}
+});
+
+router.get('/mentions', function(req, res) {
+	if (validateUrl(req)) {
+		req.session.openid = req.query.openid;
+		res.redirect('/wechata/mentions');
+	} else {
+		res.send('Your link has expired or is not valid!');
+	}
+});
+
 
 router.all('/message', wechat.validateCall);
 
@@ -45,15 +72,6 @@ router.all('/message', function(req, res) {
 	} catch (e) {
 		logger.error(e);
 	}
-});
-
-router.get('/mentions', function(req, res) {
-	database.getUserByOpenId(req.session.openid, function(user) {
-		helper.getMentions(user, function(err, mentions) {
-			if (err) res.send(err);
-			else res.json(mentions);
-		});
-	});
 });
 
 
