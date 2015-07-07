@@ -24,7 +24,7 @@ function getXmlMsg(fromMsg, content) {
 function generateReplyUrl(openid, path) {
 	var domain = config.domain;
 	var timestamp = Date.now();
-	var signature = wechat.getSignature(timestamp, fromMsg.FromUserName);
+	var signature = wechat.getSignature(timestamp, openid);
 	var url = util.format('http://%s' + path + '?openid=%s&timestamp=%s&signature=%s', domain, openid, timestamp, signature);
 	return url;
 }
