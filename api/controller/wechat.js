@@ -59,7 +59,6 @@ router.all('/message', function(req, res) {
 		logger.debug(req.body);
 		var xml = req.body;
 		parseString(xml, function(err, result) {
-			logger.debug(result);
 			req.session.openid = result.xml.FromUserName;
 			database.updateUserWechatLastReceived(result.xml.FromUserName);
 			database.logMsg(result.xml);

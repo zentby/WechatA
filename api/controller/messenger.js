@@ -35,7 +35,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 		evkey = fromMsg.EventKey;
 	if (ev == 'CLICK') {
 		function goOAuth(err) {
-			if (err != null) {
+			if (err !== null) {
 				logger.error('Error, goto A OAuth...');
 				logger.error(err);
 			}
@@ -54,7 +54,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 				callback(getXmlMsg(fromMsg, 'Your account has mapped to Assembla!'));
 			} else if (evkey == 'spaces') {
 				ahelper.getSpaces(user, function(err, spaces) {
-					if (err != null) return goOAuth(err);
+					if (err !== null) return goOAuth(err);
 					var content = 'Please click below to set default space:';
 					for (var i = 0; i < spaces.length; i++) {
 						var url = generateReplyUrl(openid, '/api/assembla/space/' + spaces[i].id + '/set');
@@ -65,15 +65,21 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 				});
 			} else if (evkey == 'mentions') {
 				ahelper.getMentions(user, function(err, mentions) {
-					if (err != null) return goOAuth(err);
-					var url = generateReplyUrl(openid, '/api/wechat/mentions');
-					var content = 'You have ' + mentions.length + ' mentions, <a href="' + url + '">Click Here</a> to view detail';
-					var msg = getXmlMsg(fromMsg, content);
+					if (err !== null) return goOAuth(err);
+					logger.debug(err);
+					var msg;
+					if (mentions && mentions.length > 0) {
+						var url = generateReplyUrl(openid, '/api/wechat/mentions');
+						var content = 'You have ' + mentions.length + ' mentions, <a href="' + url + '">Click Here</a> to view detail';
+						msg = getXmlMsg(fromMsg, content);
+					} else {
+						msg = getXmlMsg(fromMsg, "You don't have unread mentions");
+					}
 					return callback(msg);
 				})
 			}
 		});
-	}
+	};
 
 	callback('');
 };

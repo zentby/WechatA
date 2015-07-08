@@ -13,7 +13,7 @@
         ];
 
         this.mentions = function(callback) {
-            this.createCall('GET', 'user/mentions', callback)(this.config);
+            this.createCall('GET', 'user/mentions',{qs:{'unread':true}}, callback)(this.config);
         };
 
         this.mark = function(id, callback) {

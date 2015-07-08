@@ -9,7 +9,6 @@ function Database() {
     //User operations
     var user = models.User;
     this.getUser = function(condition, callback) {
-        logger.debug('Get user:' + (condition ? JSON.stringify(condition) : 'null'));
         user.findOne(condition, function(err, item) {
             logError('getUser.findOne', err);
             if (item) {
@@ -39,20 +38,24 @@ function Database() {
     };
 
     this.updateUserAssemblaToken = function(openid, token) {
-        logger.debug('Update User Assembla Token:' + (token ? JSON.stringify(token) : 'null'));
+        logger.debug('Update User Assembla Token:');
         this.getUserByOpenId(openid, function(user) {
-            user.Assembla.token_type = token.token_type;
-            user.Assembla.access_token = token.access_token;
-            user.Assembla.expire_at = Date.now() + token.expire_in * 1000;
-            user.Assembla.refresh_token = token.refresh_token;
+            user.Assembla = {
+                token_type: token.token_type,
+                access_token: token.access_token,
+                expire_at: Date.now() + (token.expires_in * 1000),
+                refresh_token: token.refresh_token,
+            };
+            logger.debug(user.errors);
             user.save();
         });
     };
 
-    this.updateUserAssemblaSpace = function (openid, spaceid) {
+    this.updateUserAssemblaSpace = function(openid, spaceid) {
         logger.debug('Update User Assembla Default Space:' + spaceid);
         this.getUserByOpenId(openid, function(user) {
             user.Assembla.DefaultSpace = spaceid;
+            logger.debug(user);
             user.save();
         });
     }

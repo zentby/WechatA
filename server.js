@@ -12,10 +12,16 @@ var fs = require('fs');
 //Use whichever logging system you prefer.
 //Doesn't have to be bole, I just wanted something more or less realistic
 var bole = require("bole");
+var boleConsole = require('bole-console');
+
+var boleConsoleStream = boleConsole({
+  timestamp: true,
+  requestDetails: true
+});
 
 bole.output([{
 	level: "debug",
-	stream: process.stdout
+	stream: boleConsoleStream
 },{
 	level: 'debug',
 	stream: fs.createWriteStream('./log/server.log')
@@ -34,4 +40,9 @@ app.listen(config.express.port, config.express.ip, function(error) {
 	}
 	log.info("express is listening on http://" +
 		config.express.ip + ":" + config.express.port);
+});
+
+process.on('uncaughtException', function (err) {
+  console.error((new Date()).toUTCString() + ' uncaughtException:', err.message);
+  console.error(err.stack);
 });

@@ -1,6 +1,8 @@
 (function() {
 
     var _ = require('lodash');
+    var util = require('util')
+        , request = require('request');
 
     var Main = function(appId, appSecret) {
         var _services = ['mentions', 'spaces', 'tickets', 'users'],
@@ -20,12 +22,12 @@
 
         this.init = function(config, callback) {
             if (!config) return;
-            this.options.accessToken = config.accessToken;
-            this.options.refreshToken = config.refreshToken;
-            this.options.expire_at = config.expire_at;
+            self.options.accessToken = config.accessToken;
+            self.options.refreshToken = config.refreshToken;
+            self.options.expire_at = config.expire_at;
 
-            if (this.options.expire_at && this.options.expire_at > Date.now() - 60 * 1000) {
-                this.refreshToken(callback);
+            if (self.options.expire_at && Date.parse(self.options.expire_at) < Date.now() - 60 * 1000) {
+                self.refreshToken(callback);
             }else{
                 callback(null,null);
             }
@@ -62,12 +64,12 @@
                     return callback(err, null);
                 }
 
-                var result = body;
+                var result = JSON.parse(body);
 
                 self.options.accessToken = result.accessToken;
-                self.options.expire_at = Date.now() + (result.expire_in * 1000);
+                self.options.expire_at = Date.now() + (result.expires_in * 1000);
                 callback(null, result);
-            }).auth(args.appId, args.appSecret);
+            }).auth(appId, appSecret);
         };
 
         return this;

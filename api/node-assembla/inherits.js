@@ -1,9 +1,8 @@
 var logger = require("bole")('assembla-service');
 (function() {
-    var _ = require('lodash')
-        , request = require('request')
-        , util = require('util')
-        , url = require('url');
+    var _ = require('lodash'),
+        request = require('request'),
+        util = require('util');
 
     var Handler = function(subClass) {
         this.createCall = function(method, path, options, callback) {
@@ -20,20 +19,14 @@ var logger = require("bole")('assembla-service');
                     qs: options.qs,
                     timeout: config.timeout || 60 * 1000 /* Default to 60sec */
                 };
-                
+
                 if (options.json) parameters.json = options.json;
-                if (config.isx){
-                    parameters.headers =  { 'X-Api-Key': config.xkey, 'X-Api-Secret': config.xsecret} ;
+                if (config.isx) {
+                    parameters.headers = {
+                        'X-Api-Key': config.xkey,
+                        'X-Api-Secret': config.xsecret
+                    };
                     logger.info('api called:' + JSON.stringify(parameters));
-                    request(parameters, function(err, res, body){
-                        if (!err && res.statusCode == 200) {
-                            return callback(null, JSON.parse(body));
-                        } else {
-                            logger.error('Code:' + res.statusCode + 'Error:' + err);
-                            return callback(err, null);
-                        }
-                    });
-                }else{
                     request(parameters, function(err, res, body) {
                         if (!err && res.statusCode == 200) {
                             return callback(null, JSON.parse(body));
@@ -41,7 +34,20 @@ var logger = require("bole")('assembla-service');
                             logger.error('Code:' + res.statusCode + 'Error:' + err);
                             return callback(err, null);
                         }
-                    }).auth(null, null, true, config.accessToken);
+                    });
+                } else {
+                    parameters.auth = {
+                        'bearer': config.accessToken
+                    };
+                    logger.debug(parameters);
+                    request(parameters, function(err, res, body) {
+                        if (!err && res.statusCode == 200) {
+                            return callback(null, JSON.parse(body));
+                        } else {
+                            logger.error(res);
+                            return callback(err, null);
+                        }
+                    });
                 }
             }
         };

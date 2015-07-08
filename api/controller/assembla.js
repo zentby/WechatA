@@ -17,6 +17,7 @@ router.all('/auth', function(req, res) {
 		var openid = req.session.openid;
 		//write token to db
 		database.updateUserAssemblaToken(openid, token);
+		res.send('success!');
 	});
 });
 

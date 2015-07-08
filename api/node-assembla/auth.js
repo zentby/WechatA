@@ -2,7 +2,8 @@ var logger = require("bole")('assembla-auth');
 (function() {
 
     var _ = require('lodash'), 
-    util = require('util'), 
+    util = require('util'),
+        request = require('request'),
     request = require('request');
 
     var Auth = function(Inherits, args) {
@@ -30,7 +31,7 @@ var logger = require("bole")('assembla-auth');
                     return callback(err, null);
                 }
 
-                var result = body;
+                var result = JSON.parse(body);
 
                 if (typeof result.error !== 'undefined') {
                     logger.error(result.error);
