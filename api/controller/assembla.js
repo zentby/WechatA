@@ -21,28 +21,33 @@ router.all('/auth', function(req, res) {
 	});
 });
 
-router.get('/mentions', function(req, res) {
+router.get('/mentions/:read', function(req, res) {
 	database.getUserByOpenId(req.session.openid, function(user) {
-		helper.getMentions(user, function(err, mentions) {
+		helper.getMentions(req.params.read, user, function(err, mentions) {
 			if (err) res.send(err);
-			else {
+			else if (mentions !== null) {
 				mentions = mentions.sort(function(a, b) {
 					return Date.parse(b.created_at) - Date.parse(a.created_at);
 				});
 				res.json(mentions);
+			} else {
+				res.send('null');
 			}
 		});
 	});
 });
 
-router.get('/testmentions', function(req, res) {
-	assembla.mentions.mentions(function(err, mentions) {
+router.get('/testmentions/:read', function(req, res) {
+	console.log('req.params.read '+req.params.read);
+	assembla.mentions.mentions(req.params.read, function(err, mentions) {
 		if (err) res.send('');
-		else {
+		else if (mentions !== null) {
 			mentions = mentions.sort(function(a, b) {
 				return Date.parse(b.created_at) - Date.parse(a.created_at);
 			});
 			res.json(mentions);
+		} else {
+			res.send('null');
 		}
 	});
 });

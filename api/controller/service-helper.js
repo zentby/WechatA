@@ -39,12 +39,12 @@ services.getSpaces = function(user, callback) {
 	});
 };
 
-services.getMentions = function(user, callback) {
+services.getMentions = function(read, user, callback) {
 	initAssembla(user, function(err) {
 		if (err != null) {
 			callback(err, null);
 		} else {
-			assembla.mentions.mentions(callback);
+			assembla.mentions.mentions(read, callback);
 		}
 	});
 };

@@ -12,8 +12,9 @@
             'message', 'read', 'created_at'
         ];
 
-        this.mentions = function(callback) {
-            this.createCall('GET', 'user/mentions',{qs:{'unread':true}}, callback)(this.config);
+        this.mentions = function(read, callback) {
+            var param = read=='read'?{read:true}:{unread:true};
+            this.createCall('GET', 'user/mentions',{qs:param}, callback)(this.config);
         };
 
         this.mark = function(id, callback) {

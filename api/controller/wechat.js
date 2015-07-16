@@ -34,7 +34,7 @@ router.all('/auth', function(req, res) {
 router.get('/space/:space_id/set', function(req, res) {
 	if (validateUrl(req)) {
 		req.session.openid = req.query.openid;
-		database.updateUserAssemblaSpace(req.query.openid, req.param.space_id);
+		database.updateUserAssemblaSpace(req.query.openid, req.params.space_id);
 		res.send('Default space has been set successfully');
 	} else {
 		res.send('Your link has expired or is not valid!');
