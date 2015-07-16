@@ -59,9 +59,9 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 					for (var i = 0; i < spaces.length; i++) {
 						var url = generateReplyUrl(openid, '/api/assembla/space/' + spaces[i].id + '/set');
 						content += '\n' + i + '. <a href="' + url + '">' + spaces[i].name + '</a> ';
-						var msg = getXmlMsg(fromMsg, content);
-						return callback(msg);
 					};
+					var msg = getXmlMsg(fromMsg, content);
+					return callback(msg);
 				});
 			} else if (evkey == 'mentions') {
 				ahelper.getMentions(user, function(err, mentions) {
