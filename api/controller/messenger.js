@@ -69,11 +69,11 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 					logger.debug(err);
 					var msg;
 					if (mentions && mentions.length > 0) {
-						var url = generateReplyUrl(openid, '/api/wechat/mentions?msg=unread');
+						var url = generateReplyUrl(openid, '/api/wechat/mentions') + '&msg=unread';
 						var content = 'You have ' + mentions.length + ' mentions, <a href="' + url + '">Click Here</a> to view detail';
 						msg = getXmlMsg(fromMsg, content);
 					} else {
-						var url1 = generateReplyUrl(openid, '/api/wechat/mentions?msg=all');
+						var url1 = generateReplyUrl(openid, '/api/wechat/mentions') + '&msg=all';
 						var content1 = 'You don\'t have unread mentions, <a href="' + url1 + '">Click Here</a> to view all mentions';
 						msg = getXmlMsg(fromMsg, content1);
 					}
