@@ -64,7 +64,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 					return callback(msg);
 				});
 			} else if (evkey == 'mentions') {
-				ahelper.getMentions(user, function(err, mentions) {
+				ahelper.getMentions('unread', user, function(err, mentions) {
 					if (err !== null) return goOAuth(err);
 					logger.debug(err);
 					var msg;
@@ -73,7 +73,9 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 						var content = 'You have ' + mentions.length + ' mentions, <a href="' + url + '">Click Here</a> to view detail';
 						msg = getXmlMsg(fromMsg, content);
 					} else {
-						msg = getXmlMsg(fromMsg, "You don't have unread mentions");
+						var url = generateReplyUrl(openid, '/api/wechat/mentions?all');
+						var content = 'You don\'t have unread mentions, <a href="' + url + '">Click Here</a> to view all mentions';
+						msg = getXmlMsg(fromMsg, content);
 					}
 					return callback(msg);
 				})
