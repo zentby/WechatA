@@ -1,4 +1,3 @@
-
 (function() {
     var _ = require('lodash');
 
@@ -13,8 +12,12 @@
         ];
 
         this.mentions = function(read, callback) {
-            var param = read=='read'?{read:true}:{unread:true};
-            this.createCall('GET', 'user/mentions',{qs:param}, callback)(this.config);
+            var param = read == 'all' ? null : {
+                unread: true
+            };
+            this.createCall('GET', 'user/mentions', {
+                qs: param
+            }, callback)(this.config);
         };
 
         this.mark = function(id, callback) {

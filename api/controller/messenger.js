@@ -34,7 +34,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 	var ev = fromMsg.Event,
 		evkey = fromMsg.EventKey;
 	if (ev == 'CLICK') {
-		function goOAuth(err) {
+		var goOAuth = function (err) {
 			if (err !== null) {
 				logger.error('Error, goto A OAuth...');
 				logger.error(err);
@@ -43,7 +43,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 			var content = 'To start Assembla OAuth process, <a href="' + url + '">Click Here</a> ';
 			var msg = getXmlMsg(fromMsg, content);
 			return callback(msg);
-		}
+		};
 
 		return database.getUserByOpenId(openid, function(user) {
 			if (!user.Assembla.refresh_token) {
@@ -59,7 +59,7 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 					for (var i = 0; i < spaces.length; i++) {
 						var url = generateReplyUrl(openid, '/api/assembla/space/' + spaces[i].id + '/set');
 						content += '\n' + i + '. <a href="' + url + '">' + spaces[i].name + '</a> ';
-					};
+					}
 					var msg = getXmlMsg(fromMsg, content);
 					return callback(msg);
 				});
@@ -69,19 +69,19 @@ messenger.getReplyMsg = function(fromMsg, callback) {
 					logger.debug(err);
 					var msg;
 					if (mentions && mentions.length > 0) {
-						var url = generateReplyUrl(openid, '/api/wechat/mentions');
+						var url = generateReplyUrl(openid, '/api/wechat/mentions#?msg=unread');
 						var content = 'You have ' + mentions.length + ' mentions, <a href="' + url + '">Click Here</a> to view detail';
 						msg = getXmlMsg(fromMsg, content);
 					} else {
-						var url = generateReplyUrl(openid, '/api/wechat/mentions?all');
-						var content = 'You don\'t have unread mentions, <a href="' + url + '">Click Here</a> to view all mentions';
-						msg = getXmlMsg(fromMsg, content);
+						var url1 = generateReplyUrl(openid, '/api/wechat/mentions#?msg=all');
+						var content1 = 'You don\'t have unread mentions, <a href="' + url1 + '">Click Here</a> to view all mentions';
+						msg = getXmlMsg(fromMsg, content1);
 					}
 					return callback(msg);
-				})
+				});
 			}
 		});
-	};
+	}
 
 	callback('');
 };
