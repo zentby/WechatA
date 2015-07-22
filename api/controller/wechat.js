@@ -44,7 +44,7 @@ router.get('/space/:space_id/set', function(req, res) {
 router.get('/mentions', function(req, res) {
 	if (validateUrl(req)) {
 		req.session.openid = req.query.openid;
-		res.redirect('/wechata/mentions');
+		res.redirect('/wechata/mentions#?msg='+req.query.msg);
 	} else {
 		res.send('Your link has expired or is not valid!');
 	}
